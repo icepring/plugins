@@ -1,49 +1,90 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:html' as html;
 
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:meta/meta.dart';
+import 'package:url_launcher_platform_interface/link.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
-class UrlLauncherPlugin {
+import 'src/link.dart';
+import 'src/shims/dart_ui.dart' as ui;
+import 'src/third_party/platform_detect/browser.dart';
+
+const Set<String> _safariTargetTopSchemes = <String>{
+  'mailto',
+  'tel',
+  'sms',
+};
+String? _getUrlScheme(String url) => Uri.tryParse(url)?.scheme;
+
+bool _isSafariTargetTopScheme(String url) =>
+    _safariTargetTopSchemes.contains(_getUrlScheme(url));
+
+/// The web implementation of [UrlLauncherPlatform].
+///
+/// This class implements the `package:url_launcher` functionality for the web.
+class UrlLauncherPlugin extends UrlLauncherPlatform {
+  /// A constructor that allows tests to override the window object used by the plugin.
+  UrlLauncherPlugin({@visibleForTesting html.Window? debugWindow})
+      : _window = debugWindow ?? html.window {
+    _isSafari = navigatorIsSafari(_window.navigator);
+  }
+
+  final html.Window _window;
+  bool _isSafari = false;
+
+  // The set of schemes that can be handled by the plugin
+  static final Set<String> _supportedSchemes = <String>{
+    'http',
+    'https',
+  }.union(_safariTargetTopSchemes);
+
+  /// Registers this class as the default instance of [UrlLauncherPlatform].
   static void registerWith(Registrar registrar) {
-    final MethodChannel channel = MethodChannel(
-        'plugins.flutter.io/url_launcher',
-        const StandardMethodCodec(),
-        registrar.messenger);
-    final UrlLauncherPlugin instance = UrlLauncherPlugin();
-    channel.setMethodCallHandler(instance.handleMethodCall);
+    UrlLauncherPlatform.instance = UrlLauncherPlugin();
+    ui.platformViewRegistry
+        .registerViewFactory(linkViewType, linkViewFactory, isVisible: false);
   }
 
-  Future<dynamic> handleMethodCall(MethodCall call) async {
-    switch (call.method) {
-      case 'canLaunch':
-        final String url = call.arguments['url'];
-        return _canLaunch(url);
-      case 'launch':
-        final String url = call.arguments['url'];
-        return _launch(url);
-      default:
-        throw PlatformException(
-            code: 'Unimplemented',
-            details: "The url_launcher plugin for web doesn't implement "
-                "the method '${call.method}'");
-    }
+  @override
+  LinkDelegate get linkDelegate {
+    return (LinkInfo linkInfo) => WebLinkDelegate(linkInfo);
   }
 
-  bool _canLaunch(String url) {
-    final Uri parsedUrl = Uri.tryParse(url);
-    if (parsedUrl == null) return false;
-
-    return parsedUrl.isScheme('http') || parsedUrl.isScheme('https');
-  }
-
-  bool _launch(String url) {
-    return openNewWindow(url) != null;
-  }
-
+  /// Opens the given [url] in the specified [webOnlyWindowName].
+  ///
+  /// Returns the newly created window.
   @visibleForTesting
-  html.WindowBase openNewWindow(String url) {
-    return html.window.open(url, '');
+  html.WindowBase openNewWindow(String url, {String? webOnlyWindowName}) {
+    // We need to open mailto, tel and sms urls on the _top window context on safari browsers.
+    // See https://github.com/flutter/flutter/issues/51461 for reference.
+    final String target = webOnlyWindowName ??
+        ((_isSafari && _isSafariTargetTopScheme(url)) ? '_top' : '');
+    // ignore: unsafe_html
+    return _window.open(url, target);
+  }
+
+  @override
+  Future<bool> canLaunch(String url) {
+    return Future<bool>.value(_supportedSchemes.contains(_getUrlScheme(url)));
+  }
+
+  @override
+  Future<bool> launch(
+    String url, {
+    bool useSafariVC = false,
+    bool useWebView = false,
+    bool enableJavaScript = false,
+    bool enableDomStorage = false,
+    bool universalLinksOnly = false,
+    Map<String, String> headers = const <String, String>{},
+    String? webOnlyWindowName,
+  }) {
+    return Future<bool>.value(
+        openNewWindow(url, webOnlyWindowName: webOnlyWindowName) != null);
   }
 }

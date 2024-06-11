@@ -1,3 +1,322 @@
+## 6.1.9
+
+* Updates minimum Flutter version to 3.0.
+* Updates iOS minimum version in README.
+
+## 6.1.8
+
+* Updates code for stricter lint checks.
+
+## 6.1.7
+
+* Updates code for new analysis options.
+
+## 6.1.6
+
+* Updates imports for `prefer_relative_imports`.
+* Updates minimum Flutter version to 2.10.
+* Fixes avoid_redundant_argument_values lint warnings and minor typos.
+
+## 6.1.5
+
+* Migrates `README.md` examples to the [`code-excerpt` system](https://github.com/flutter/flutter/wiki/Contributing-to-Plugins-and-Packages#readme-code).
+
+## 6.1.4
+
+* Adopts new platform interface method for launching URLs.
+* Ignores unnecessary import warnings in preparation for [upcoming Flutter changes](https://github.com/flutter/flutter/pull/105648).
+
+## 6.1.3
+
+* Updates README section about query permissions to better reflect changes to
+  `canLaunchUrl` recommendations.
+
+## 6.1.2
+
+* Minor fixes for new analysis options.
+
+## 6.1.1
+
+* Removes unnecessary imports.
+* Fixes library_private_types_in_public_api, sort_child_properties_last and use_key_in_widget_constructors
+  lint warnings.
+
+## 6.1.0
+
+* Introduces new `launchUrl` and `canLaunchUrl` APIs; `launch` and `canLaunch`
+  are now deprecated. These new APIs:
+  * replace the `String` URL argument with a `Uri`, to prevent common issues
+    with providing invalid URL strings.
+  * replace `forceSafariVC` and `forceWebView` with `LaunchMode`, which makes
+    the API platform-neutral, and standardizes the default behavior between
+    Android and iOS.
+  * move web view configuration options into a new `WebViewConfiguration`
+    object. The default behavior for JavaScript and DOM storage is now enabled
+    rather than disabled.
+* Also deprecates `closeWebView` in favor of `closeInAppWebView` to clarify
+  that it is specific to the in-app web view launch option.
+* Adds OS version support information to README.
+* Reorganizes and clarifies README.
+
+## 6.0.20
+
+* Fixes a typo in `default_package` registration for Windows, macOS, and Linux.
+
+## 6.0.19
+
+* Updates README:
+  * Adds description for `file` scheme usage.
+  * Updates `Uri` class link to SDK documentation.
+
+## 6.0.18
+
+* Removes dependency on `meta`.
+
+## 6.0.17
+
+* Updates code for new analysis options.
+
+## 6.0.16
+
+* Moves Android and iOS implementations to federated packages.
+
+## 6.0.15
+
+* Updates README:
+  * Improves organization.
+  * Clarifies how `canLaunch` should be used.
+* Updates example application to demonstrate intended use of `canLaunch`.
+
+## 6.0.14
+
+* Updates readme to indicate that sending SMS messages on Android 11 requires to add a query to AndroidManifest.xml.
+* Fixes integration tests.
+* Updates example app Android compileSdkVersion to 31.
+
+## 6.0.13
+
+* Fixed extracting browser headers when they are null error.
+
+## 6.0.12
+
+* Fixed an error where 'launch' method of url_launcher would cause an error if the provided URL was not valid by RFC 3986.
+
+## 6.0.11
+
+* Update minimum Flutter SDK to 2.5 and iOS deployment target to 9.0.
+* Updated Android lint settings.
+
+## 6.0.10
+
+* Remove references to the Android v1 embedding.
+
+## 6.0.9
+
+* Silenced warnings that may occur during build when using a very
+  recent version of Flutter relating to null safety.
+
+## 6.0.8
+
+* Adding API level 30 required package visibility configuration to the example's AndroidManifest.xml and README
+* Fix test button check for iOS 15.
+
+## 6.0.7
+
+* Update the README to describe a workaround to the `Uri` query
+  encoding bug.
+
+## 6.0.6
+
+* Require `url_launcher_platform_interface` 2.0.3. This fixes an issue
+  where 6.0.5 could fail to compile in some projects due to internal
+  changes in that version that were not compatible with earlier versions
+  of `url_launcher_platform_interface`.
+
+## 6.0.5
+
+* Add iOS unit and UI integration test targets.
+* Add a `Link` widget to the example app.
+
+## 6.0.4
+
+* Migrate maven repository from jcenter to mavenCentral.
+
+## 6.0.3
+
+* Update README notes about URL schemes on iOS
+
+## 6.0.2
+
+* Update platform_plugin_interface version requirement.
+
+## 6.0.1
+
+* Update result to `True` on iOS when the url was loaded successfully.
+* Added a README note about required applications.
+
+## 6.0.0
+
+* Migrate to null safety.
+* Fix outdated links across a number of markdown files ([#3276](https://github.com/flutter/plugins/pull/3276))
+* Update the example app: remove the deprecated `RaisedButton` and `FlatButton` widgets.
+* Correct statement in description about which platforms url_launcher supports.
+
+## 5.7.13
+
+* Update Flutter SDK constraint.
+
+## 5.7.12
+
+* Updated code sample in `README.md`
+
+## 5.7.11
+
+* Update integration test examples to use `testWidgets` instead of `test`.
+
+## 5.7.10
+
+* Update Dart SDK constraint in example.
+
+## 5.7.9
+
+* Check in windows/ directory for example/
+
+## 5.7.8
+
+* Fixed a situation where an app would crash if the url_launcher’s `launch` method can’t find an app to open the provided url. It will now throw a clear Dart PlatformException.
+
+## 5.7.7
+
+* Introduce the Link widget with an implementation for native platforms.
+
+## 5.7.6
+
+* Suppress deprecation warning on the `shouldOverrideUrlLoading` method on Android of the `FlutterWebChromeClient` class.
+
+## 5.7.5
+
+* Improved documentation of the `headers` parameter.
+
+## 5.7.4
+
+* Update android compileSdkVersion to 29.
+
+## 5.7.3
+
+* Check in linux/ directory for example/
+
+## 5.7.2
+
+* Add API documentation explaining the [canLaunch] method returns `false` if package visibility (Android API 30) is not managed correctly.
+
+## 5.7.1
+
+* Keep handling deprecated Android v1 classes for backward compatibility.
+
+## 5.7.0
+
+* Handle WebView multi-window support.
+
+## 5.6.0
+
+* Support Windows by default.
+
+## 5.5.3
+
+* Suppress deprecation warning on the `shouldOverrideUrlLoading` method on Android.
+
+## 5.5.2
+
+* Depend explicitly on the `platform_interface` package that adds the `webOnlyWindowName` parameter.
+
+## 5.5.1
+
+* Added webOnlyWindowName parameter to launch()
+
+## 5.5.0
+
+* Support Linux by default.
+
+## 5.4.11
+
+* Add documentation in README suggesting how to properly encode urls with special characters.
+
+## 5.4.10
+
+* Post-v2 Android embedding cleanups.
+
+## 5.4.9
+
+* Update README.
+
+## 5.4.8
+
+* Initialize `previousAutomaticSystemUiAdjustment` in launch method.
+
+## 5.4.7
+
+* Update lower bound of dart dependency to 2.1.0.
+
+## 5.4.6
+
+* Add `web` to the example app.
+
+## 5.4.5
+
+* Remove Android dependencies fallback.
+* Require Flutter SDK 1.12.13+hotfix.5 or greater.
+* Fix CocoaPods podspec lint warnings.
+
+## 5.4.4
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 5.4.3
+
+* Fixed the launchUniversalLinkIos method.
+
+## 5.4.2
+
+* Make the pedantic dev_dependency explicit.
+
+## 5.4.1
+
+* Update unit tests to work with the PlatformInterface from package `plugin_platform_interface`.
+
+## 5.4.0
+
+* Support macOS by default.
+
+## 5.3.0
+
+* Support web by default.
+* Use the new plugins pubspec schema.
+
+## 5.2.7
+
+* Minor unit test changes and added a lint for public DartDocs.
+
+## 5.2.6
+
+*  Remove AndroidX warnings.
+
+## 5.2.5
+
+* Include lifecycle dependency as a compileOnly one on Android to resolve
+  potential version conflicts with other transitive libraries.
+
+## 5.2.4
+
+* Use `package:url_launcher_platform_interface` to get the platform-specific implementation.
+
+## 5.2.3
+
+* Android: Use android.arch.lifecycle instead of androidx.lifecycle:lifecycle in `build.gradle` to support apps that has not been migrated to AndroidX.
+
+## 5.2.2
+
+* Re-land embedder v2 support with correct Flutter SDK constraints.
+
 ## 5.2.1
 
 * Revert the migration since the Flutter dependency was too low.
